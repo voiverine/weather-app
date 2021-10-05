@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Container, Tabs, Tab } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import Forecast from "./features/forecast";
+import Stations from "./features/stations/Stations";
+import TabPanel from "./components/tabPanel/TabPanel";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+import "react-toastify/dist/ReactToastify.min.css";
+const App = () => {
+  const [selectedTab, setSelectedTab] = useState<"forecast" | "stations">(
+    "forecast"
   );
-}
+
+  return (
+    <Container maxWidth="lg">
+      <header>
+        <Tabs value={selectedTab} onChange={(e, val) => setSelectedTab(val)}>
+          <Tab label="Weather" id="forecast" value="forecast" />
+          <Tab label="My Weather Stations" id="stations" value="stations" />
+        </Tabs>
+        <TabPanel value={selectedTab} index="forecast">
+          <Forecast />
+        </TabPanel>
+        <TabPanel value={selectedTab} index="stations">
+          <Stations />
+        </TabPanel>
+      </header>
+      <ToastContainer position="bottom-right" />
+    </Container>
+  );
+};
 
 export default App;
