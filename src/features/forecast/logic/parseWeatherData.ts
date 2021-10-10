@@ -1,6 +1,6 @@
 import { ParsedResponse, WeatherResponseData } from "./types";
-import { formatDate } from "../../../app/formatDate";
-import { createImageUri } from "../../../app/createImageUri";
+import { formatDate } from "./formatDate";
+import { createImageUri } from "./createImageUri";
 import { apiPaths } from "../../../app/constants";
 
 type ParseWeatherData = (data: WeatherResponseData) => ParsedResponse;

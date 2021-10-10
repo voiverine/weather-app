@@ -5,13 +5,14 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { apiPaths } from "../../app/constants";
 import { useForecast } from "./logic/useForecast";
 import Results from "./Results";
-import Subtitle from "../../components/subtitle/Subtitle";
+import Subtitle from "../../components/subtitle";
 
 const Forecast = (): ReactElement => {
   const {
     handleSubmit,
     handleForecastTypeChange,
     error,
+    isLoading,
     parsedData,
     setSearchPhrase,
     searchPhrase,
@@ -23,6 +24,7 @@ const Forecast = (): ReactElement => {
       <Grid item xs={12} sm={4}>
         <form onSubmit={handleSubmit}>
           <TextField
+            fullWidth
             value={searchPhrase}
             onChange={(event) => setSearchPhrase(event.target.value)}
             label="search for city"
@@ -42,8 +44,9 @@ const Forecast = (): ReactElement => {
         </ToggleButtonGroup>
       </Grid>
       {error && !parsedData ? (
-        <Subtitle>Nie udało się pobrać wyników dla {searchPhrase}</Subtitle>
+        <Subtitle>We couldn't fetch the results for {searchPhrase}.</Subtitle>
       ) : null}
+      {!parsedData && isLoading ? <Subtitle>Loading...</Subtitle> : null}
       {parsedData ? <Results data={parsedData} /> : null}
     </Grid>
   );

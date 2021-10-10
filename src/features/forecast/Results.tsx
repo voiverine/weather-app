@@ -10,7 +10,7 @@ import {
   Avatar,
   Chip,
 } from "@mui/material";
-import Subtitle from "../../components/subtitle/Subtitle";
+import Subtitle from "../../components/subtitle";
 import { apiPaths } from "../../app/constants";
 
 interface Props {
@@ -46,7 +46,7 @@ const Results = (props: Props): ReactElement => {
           <TableBody>
             {data.map((row) => (
               <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
+                <TableCell component="td" scope="row">
                   {row.date} {row.isToday ? <Chip label="Today" /> : null}
                 </TableCell>
                 <TableCell>

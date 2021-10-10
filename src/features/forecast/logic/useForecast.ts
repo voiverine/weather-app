@@ -1,16 +1,9 @@
-import {
-  FormEvent,
-  MouseEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, MouseEvent, useMemo, useState } from "react";
 import { apiPaths } from "../../../app/constants";
 import { useAPIQuery } from "../../../hooks/useAPIQuery";
 import { parseWeatherData } from "./parseWeatherData";
-import { ForecastResponseData, WeatherResponseData } from "./types";
 import { parseForecastData } from "./parseForecastData";
+import { ForecastResponseData, WeatherResponseData } from "./types";
 
 export const useForecast = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("");
@@ -18,22 +11,33 @@ export const useForecast = () => {
     typeof apiPaths.weather | typeof apiPaths.forecast
   >(apiPaths.weather);
 
+  // 1 day
   const {
     refetch: fetchWeather,
     error: errorWeather,
     data: dataWeather,
-  } = useAPIQuery([apiPaths.weather, { q: searchPhrase }], { enabled: false });
+    isLoading: isLoadingWeather,
+  } = useAPIQuery<WeatherResponseData>(
+    [apiPaths.weather, { q: searchPhrase }],
+    { enabled: false }
+  );
+
+  // 5 days
   const {
     refetch: fetchForecast,
     error: errorForecast,
     data: dataForecast,
-  } = useAPIQuery([apiPaths.forecast, { q: searchPhrase }], { enabled: false });
+    isLoading: isLoadingForecast,
+  } = useAPIQuery<ForecastResponseData>(
+    [apiPaths.forecast, { q: searchPhrase }],
+    { enabled: false }
+  );
 
-  const handleApiCall = () => {
-    if (forecastType === apiPaths.weather) {
+  const handleApiCall = (type = forecastType) => {
+    if (type === apiPaths.weather) {
       void fetchWeather();
     }
-    if (forecastType === apiPaths.forecast) {
+    if (type === apiPaths.forecast) {
       void fetchForecast();
     }
   };
@@ -50,29 +54,24 @@ export const useForecast = () => {
   ) => {
     if (value) {
       setForecastType(value);
-    } else if (searchPhrase) {
+    }
+    if (value && searchPhrase) {
+      // fetch results for the type of state that component is changing to
+      handleApiCall(value);
+    }
+    if (!value && searchPhrase) {
+      // fetch results for the current type of state if state doesn't change
       handleApiCall();
     }
   };
 
-  // trigger request on change of 1-day / 5-day forecast
-  const isMounted = useRef(false);
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      return;
-    }
-    if (searchPhrase) handleApiCall();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forecastType]);
-
   const parsedData = useMemo(() => {
     if (dataWeather && forecastType === apiPaths.weather) {
-      return parseWeatherData(dataWeather as WeatherResponseData);
+      return parseWeatherData(dataWeather);
     }
 
     if (dataForecast && forecastType === apiPaths.forecast) {
-      return parseForecastData(dataForecast as ForecastResponseData);
+      return parseForecastData(dataForecast);
     }
   }, [dataWeather, dataForecast, forecastType]);
 
@@ -80,6 +79,7 @@ export const useForecast = () => {
     handleSubmit,
     handleForecastTypeChange,
     error: errorWeather || errorForecast,
+    isLoading: isLoadingWeather || isLoadingForecast,
     parsedData,
     setSearchPhrase,
     searchPhrase,
