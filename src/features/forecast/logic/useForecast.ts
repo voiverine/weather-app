@@ -1,5 +1,5 @@
 import { FormEvent, MouseEvent, useMemo, useState } from "react";
-import { apiPaths } from "../../../app/constants";
+import { apiPaths, units } from "../../../app/constants";
 import { useAPIQuery } from "../../../hooks/useAPIQuery";
 import { parseWeatherData } from "./parseWeatherData";
 import { parseForecastData } from "./parseForecastData";
@@ -18,7 +18,7 @@ export const useForecast = () => {
     data: dataWeather,
     isLoading: isLoadingWeather,
   } = useAPIQuery<WeatherResponseData>(
-    [apiPaths.weather, { q: searchPhrase }],
+    [apiPaths.weather, { q: searchPhrase, units }],
     { enabled: false }
   );
 
@@ -29,7 +29,7 @@ export const useForecast = () => {
     data: dataForecast,
     isLoading: isLoadingForecast,
   } = useAPIQuery<ForecastResponseData>(
-    [apiPaths.forecast, { q: searchPhrase }],
+    [apiPaths.forecast, { q: searchPhrase, units }],
     { enabled: false }
   );
 

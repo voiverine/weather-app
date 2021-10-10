@@ -8,7 +8,7 @@ import TabPanel from "./components/tabPanel";
 import "react-toastify/dist/ReactToastify.min.css";
 const App = () => {
   const [selectedTab, setSelectedTab] = useState<"forecast" | "stations">(
-    "stations"
+    "forecast"
   );
 
   return (

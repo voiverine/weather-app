@@ -1,4 +1,47 @@
-# Getting Started with Create React App
+# Weather App
+
+This application was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). 
+Please scroll to [Go to Getting Started section](#getting-started-with-create-react-app) 
+for setup tutorial or run:
+```
+yarn install
+yarn start
+```
+
+### Application Structure
+`app` - application constants, configuration, styles
+
+`components` - components used throughout the app
+
+`features` - main application features,
+separated by folders (candidates for routes)
+
+`hooks` - hooks used throughout the app
+
+### React Global State
+
+This application doesn't use a global state management like `redux`, instead it uses [React Query](https://react-query.tanstack.com) 
+for caching and requesting api responses. 
+
+### HTTP Proxy 
+Application proxies the api requests through a Heroku Express server. 
+Should you experience any problems with connectivity, 
+check if the proxy is working.
+```
+https://weather-proxy-api.herokuapp.com/home
+```
+
+### CI/CD
+
+For now, the application is deployed using
+[gh-pages](https://pages.github.com/). 
+
+```
+yarn run deploy
+```
+
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

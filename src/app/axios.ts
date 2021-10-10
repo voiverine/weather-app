@@ -1,17 +1,14 @@
 import axios from "axios";
-import { apiUrl, apiKey, units } from "./constants";
+import { apiUrl } from "./constants";
 
 class AxiosApi {
   readonly axiosInstance;
 
-  constructor(private baseURL: string, private apiKey: string) {
+  constructor(private baseURL: string) {
     this.axiosInstance = axios.create({
       baseURL,
     });
-    this.axiosInstance.interceptors.request.use((config) => {
-      config.params = { ...config.params, APPID: apiKey, units };
-      return config;
-    });
+    // space to add interceptors
   }
 
   get(path: string, params?: Record<string, string | number>) {
@@ -67,5 +64,5 @@ class AxiosApi {
   }
 }
 
-const axiosApi = new AxiosApi(apiUrl, apiKey);
+const axiosApi = new AxiosApi(apiUrl);
 export { axiosApi };

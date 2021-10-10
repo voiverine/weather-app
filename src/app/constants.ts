@@ -1,6 +1,4 @@
-export const apiUrl = "https://api.openweathermap.org/data";
-export const apiKey = "5a79fb7d70fa46e3dd11dcb26e9ad109";
-
+export const apiUrl = "https://weather-proxy-api.herokuapp.com/";
 export const apiImageUrl = "http://openweathermap.org/img/wn/";
 export const apiImageSuffix = "@2x.png";
 
