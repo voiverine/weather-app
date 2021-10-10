@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Container, Tabs, Tab } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import Forecast from "./features/forecast";
-import Stations from "./features/stations/Stations";
-import TabPanel from "./components/tabPanel/TabPanel";
+import Stations from "./features/stations";
+import TabPanel from "./components/tabPanel";
 
 import "react-toastify/dist/ReactToastify.min.css";
 const App = () => {
   const [selectedTab, setSelectedTab] = useState<"forecast" | "stations">(
-    "forecast"
+    "stations"
   );
 
   return (

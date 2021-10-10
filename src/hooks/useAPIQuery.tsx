@@ -1,22 +1,36 @@
 import { useEffect } from "react";
 import { useQuery } from "react-query";
-import { UseQueryOptions } from "react-query/types/react/types";
-import { toast } from "react-toastify";
+import { UseQueryOptions, UseQueryResult } from "react-query/types/react/types";
 import { axiosApi } from "../app/axios";
+import { showToast } from "../app/showToast";
 
-type Url = [path: string, params: Record<string, string | number>];
+type Url = [path: string, params?: Record<string, string | number>];
 interface Options extends UseQueryOptions {
   showToast?: boolean;
   toastMessage?: string;
+  method?: "GET" | "DELETE";
 }
-const defaultOptions = { showToast: true };
+const defaultOptions = { showToast: true, method: "GET" };
 
-const useAPIQuery = (url: Url, options: Options = {}) => {
-  const mergedOptions = { ...defaultOptions, ...options };
+type UseAPIQuery = <TData = unknown>(
+  url: Url,
+  options?: Options
+) => UseQueryResult<TData>;
 
-  const result = useQuery(
+const useAPIQuery: UseAPIQuery = <TData extends unknown>(
+  url: Url,
+  options: Options = {}
+) => {
+  const mergedOptions: Record<string, any> = { ...defaultOptions, ...options };
+
+  const result = useQuery<TData, Error>(
     url,
-    () => axiosApi.get(url[0], url[1]),
+    () => {
+      if (options.method === "DELETE") {
+        return axiosApi.delete(url[0]);
+      }
+      return axiosApi.get(url[0], url[1]);
+    },
     mergedOptions
   );
 
@@ -24,11 +38,7 @@ const useAPIQuery = (url: Url, options: Options = {}) => {
   const { error } = result;
   useEffect(() => {
     if (mergedOptions.showToast && error) {
-      const assertedError = error as Error;
-      const defaultMessage =
-        "message" in assertedError ? assertedError.message : "";
-      const message = mergedOptions.toastMessage || defaultMessage;
-      toast(message);
+      showToast(error);
     }
   }, [error, mergedOptions.toastMessage, mergedOptions.showToast]);
 
